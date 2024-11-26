@@ -1,0 +1,46 @@
+BEGIN
+    pkg_lieu.add_lieu('Nouveau Théâtre', 'Rue de Exemple, Tunis', 800);
+END;
+
+
+
+BEGIN
+    pkg_lieu.update_lieu(1, 'Théâtre Rénové', 900);
+END;
+
+
+
+BEGIN
+    pkg_lieu.delete_lieu(5); -- Replace 5 with a venue ID with no associated spectacles
+END;
+
+
+
+BEGIN
+    pkg_lieu.delete_lieu(3); -- Replace 3 with a venue ID that has associated spectacles
+END;
+
+
+
+-- Search by Name
+VARIABLE v_cursor REFCURSOR;
+BEGIN
+    :v_cursor := pkg_lieu.search_lieu('Théâtre', NULL);
+END;
+PRINT v_cursor;
+
+
+-- Search by Capacity
+VARIABLE v_cursor REFCURSOR;
+BEGIN
+    :v_cursor := pkg_lieu.search_lieu(NULL, 900);
+END;
+PRINT v_cursor;
+
+
+-- Search by Both Name and Capacity
+VARIABLE v_cursor REFCURSOR;
+BEGIN
+    :v_cursor := pkg_lieu.search_lieu('Théâtre', 900);
+END;
+PRINT v_cursor;

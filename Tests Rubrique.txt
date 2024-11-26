@@ -1,0 +1,136 @@
+-- 1. Test add_rubrique Procedure
+-- Test Case 1: Add a valid rubrique
+BEGIN
+    pkg_rubrique.add_rubrique(
+        p_idSpec => 1,
+        p_idArt => 8,
+        p_h_debutR => 21.5,
+        p_dureeRub => 0.5,
+        p_type => 'chant'
+    );
+END;
+/
+
+-- Test Case 2: Add a rubrique with a type mismatch
+BEGIN
+    pkg_rubrique.add_rubrique(
+        p_idSpec => 1,
+        p_idArt => 8,
+        p_h_debutR => 21.5,
+        p_dureeRub => 0.5,
+        p_type => 'dance'
+    );
+END;
+/
+
+-- Test Case 3: Add a rubrique starting before the spectacle
+BEGIN
+    pkg_rubrique.add_rubrique(
+        p_idSpec => 1,
+        p_idArt => 7,
+        p_h_debutR => 20.5,
+        p_dureeRub => 1.0,
+        p_type => 'dance'
+    );
+END;
+/
+
+-- Test Case 4: Add a rubrique exceeding spectacle duration
+BEGIN
+    pkg_rubrique.add_rubrique(
+        p_idSpec => 2,
+        p_idArt => 6,
+        p_h_debutR => 21.0,
+        p_dureeRub => 2.0,
+        p_type => 'comedie'
+    );
+END;
+/
+
+-- 2. Test update_rubrique Procedure
+-- Test Case 1: Update the artist for a rubrique
+BEGIN
+    pkg_rubrique.update_rubrique(
+        p_idRub => 8,
+        p_idArt => 9
+    );
+END;
+/
+
+-- Test Case 2: Update the start time of a rubrique
+BEGIN
+    pkg_rubrique.update_rubrique(
+        p_idRub => 8,
+        p_h_debutR => 22.0
+    );
+END;
+/
+
+-- Test Case 3: Update the duration to exceed spectacle end time
+BEGIN
+    pkg_rubrique.update_rubrique(
+        p_idRub => 8,
+        p_dureeRub => 3.0
+    );
+END;
+/
+
+-- Test Case 4: Update to conflicting schedule
+BEGIN
+    pkg_rubrique.update_rubrique(
+        p_idRub => 8,
+        p_h_debutR => 21.0
+    );
+END;
+/
+
+-- 3. Test delete_rubrique Procedure
+-- Test Case: Delete an existing rubrique
+BEGIN
+    pkg_rubrique.delete_rubrique(
+        p_idRub => 8
+    );
+END;
+/
+
+-- Verification:
+SELECT * FROM Rubrique WHERE idRub = 8;
+
+-- 4. Test search_rubrique Function
+-- Test Case 1: Search by spectacle ID
+VARIABLE v_cursor REFCURSOR;
+BEGIN
+    :v_cursor := pkg_rubrique.search_rubrique(
+        p_idSpec => 1
+    );
+END;
+/
+PRINT v_cursor;
+
+-- Test Case 2: Search by artist name
+VARIABLE v_cursor REFCURSOR;
+BEGIN
+    :v_cursor := pkg_rubrique.search_rubrique(
+        p_nomArt => 'Trabelsi'
+    );
+END;
+/
+PRINT v_cursor;
+
+-- Test Case 3: Search by both spectacle ID and artist name
+VARIABLE v_cursor REFCURSOR;
+BEGIN
+    :v_cursor := pkg_rubrique.search_rubrique(
+        p_idSpec => 1,
+        p_nomArt => 'Aouicha'
+    );
+END;
+/
+PRINT v_cursor;
+
+-- Verification Queries
+-- List all rubriques
+SELECT * FROM Rubrique;
+
+-- Check if a specific rubrique exists
+SELECT * FROM Rubrique WHERE idRub = 8;
